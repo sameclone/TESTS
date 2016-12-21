@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -46,6 +47,14 @@ public class BeatBox {
         JButton downTempo = new JButton("Tempo Down");
         downTempo.addActionListener(new MyDownTempoListener());
         buttonBox.add(downTempo);
+
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new MySendListener());
+        buttonBox.add(saveButton);
+
+        JButton loadButton = new JButton("Load");
+        loadButton.addActionListener(new MyReadInListener());
+        buttonBox.add(loadButton);
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
         for (int i = 0; i < 16; i++) {
@@ -101,20 +110,19 @@ public class BeatBox {
             trackList = new int[16];
             int key = instruments[i];
             for (int j = 0; j < 16; j++) {
-                JCheckBox jc = (JCheckBox)checkBoxList.get(j+(16*i));
-                if(jc.isSelected()){
-                    trackList[j]=key;
-                }
-                else {
-                    trackList[j]=0;
+                JCheckBox jc = (JCheckBox) checkBoxList.get(j + (16 * i));
+                if (jc.isSelected()) {
+                    trackList[j] = key;
+                } else {
+                    trackList[j] = 0;
                 }
             }
             makeTracks(trackList);
-            track.add(makeEvent(176,1,127,0,16));
+            track.add(makeEvent(176, 1, 127, 0, 16));
 
         }
 
-        track.add(makeEvent(192,9,1,0,15));
+        track.add(makeEvent(192, 9, 1, 0, 15));
 
         try {
             sequencer.setSequence(sequence);
@@ -127,7 +135,7 @@ public class BeatBox {
     }
 
 
-    public class MyStartListener implements ActionListener{
+    public class MyStartListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -135,7 +143,7 @@ public class BeatBox {
         }
     }
 
-    public class MyStopListener implements ActionListener{
+    public class MyStopListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -143,43 +151,43 @@ public class BeatBox {
         }
     }
 
-    public class MyUpTempoListener implements ActionListener{
+    public class MyUpTempoListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float)(tempoFactor*1.03));
+            sequencer.setTempoFactor((float) (tempoFactor * 1.03));
         }
     }
 
-    public class MyDownTempoListener implements ActionListener{
+    public class MyDownTempoListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float)(tempoFactor*.97));
+            sequencer.setTempoFactor((float) (tempoFactor * .97));
         }
     }
 
-    public void makeTracks(int[] list){
-        for(int i=0;i<16;i++){
+    public void makeTracks(int[] list) {
+        for (int i = 0; i < 16; i++) {
             int key = list[i];
 
-            if(key!=0){
-                track.add(makeEvent(144,9,key,100,i));
-                track.add(makeEvent(128,9,key,100,i+1));
+            if (key != 0) {
+                track.add(makeEvent(144, 9, key, 100, i));
+                track.add(makeEvent(128, 9, key, 100, i + 1));
             }
         }
     }
 
-    public MidiEvent makeEvent (int comd, int chan, int one, int two, int tick){
+    public MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
         MidiEvent event = null;
 
 
         try {
             ShortMessage a = new ShortMessage();
-            a.setMessage(comd,chan,one,two);
-            event = new MidiEvent(a,tick);
+            a.setMessage(comd, chan, one, two);
+            event = new MidiEvent(a, tick);
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();
         }
@@ -187,8 +195,72 @@ public class BeatBox {
         return event;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new BeatBox().buildGUI();
     }
 
+
+    public class MySendListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileSave = new JFileChooser();
+            fileSave.showSaveDialog(theFrame);
+            save(fileSave.getSelectedFile());
+
+        }
+    }
+
+    public class MyReadInListener implements ActionListener {
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileOpen = new JFileChooser();
+            fileOpen.showOpenDialog(theFrame);
+            load(fileOpen.getSelectedFile());
+
+        }
+
+
+    }
+
+    private void load(File file) {
+        boolean[] checkboxState = null;
+        try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(file))) {
+            checkboxState = (boolean[]) is.readObject();
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
+
+        for (int i = 0; i < 256; i++) {
+            JCheckBox checkBox = (JCheckBox) checkBoxList.get(i);
+            checkBox.setSelected(checkboxState[i]);
+        }
+        sequencer.stop();
+        buildTrackAndStart();
+    }
+
+    private void save(File file) {
+        boolean[] checkboxState = new boolean[256];
+
+        for (int i = 0; i < 256; i++) {
+            JCheckBox checkBox = (JCheckBox) checkBoxList.get(i);
+            if (checkBox.isSelected()) {
+                checkboxState[i] = true;
+            }
+        }
+
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file))) {
+            os.writeObject(checkboxState);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
 }
+
+
+
