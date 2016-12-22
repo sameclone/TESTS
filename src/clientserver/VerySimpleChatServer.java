@@ -55,6 +55,7 @@ public class VerySimpleChatServer {
                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
                 clientOutputStreams.add(writer);
 
+
                 Thread t = new Thread(new ClientHandler(clientSocket));
                 t.start();
                 System.out.println("got connection!");
