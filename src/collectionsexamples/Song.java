@@ -40,4 +40,17 @@ public class Song implements Comparable<Song>{
     public int compareTo(Song o) {
         return title.compareTo(o.getTitle());
     }
+
+    public boolean equals(Object song){
+        if(song instanceof Song){
+            Song s = (Song)song;
+            return getTitle().equals(s.getTitle());
+        }
+        else
+            return false;
+    }
+
+    public int hashCode(){
+        return title.hashCode();
+    }
 }
