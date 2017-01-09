@@ -36,6 +36,8 @@ public class TestSet {
         System.out.println(b3);
         b4 = set.add(8); //true
         System.out.println(b4);
+      //  boolean b5= set.add(null); //NullPointerException
+       // System.out.println("b5="+b5);
 
         for (Integer integer : set) {
             System.out.print(integer + ", ");
