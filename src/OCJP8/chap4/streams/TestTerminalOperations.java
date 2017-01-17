@@ -1,10 +1,9 @@
 package OCJP8.chap4.streams;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -111,6 +110,27 @@ public class TestTerminalOperations {
         BinaryOperator<Integer> binaryOperator1 = (a,b)->a*b;
         Stream<Integer> integerStream1 = Stream.of(3,5,6);
         System.out.println(integerStream1.reduce(1,binaryOperator1,binaryOperator1));
+
+        System.out.println("----------");
+
+        //collect
+
+        Stream<String> stream2 = Stream.of("B","A","D"," ","W","O","L","F");
+        StringBuilder word2 = stream2.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
+        System.out.println(word2);
+
+        Stream<String> stream3 = Stream.of("B","A","D"," ","W","O","L","F");
+        TreeSet<String> set = stream3.collect(TreeSet::new,TreeSet::add,TreeSet::addAll);
+        System.out.println(set);
+
+        Stream<String> stream4 = Stream.of("B","A","D"," ","W","O","L","F");
+        TreeSet<String> set1 = stream4.collect(Collectors.toCollection(TreeSet::new));
+        System.out.println(set1);
+
+        Stream<String> stream5 = Stream.of("B","A","D"," ","W","O","L","F");
+        Set<String> set2 = stream5.collect(Collectors.toSet());
+        System.out.println(set2);
+
 
 
 
