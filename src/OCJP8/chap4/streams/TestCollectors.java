@@ -109,6 +109,14 @@ public class TestCollectors {
         System.out.println(result15);
         System.out.println("-------");
 
+        Stream<String> stream = Stream.iterate("", (s) -> s + "1");
+        System.out.println(stream.limit(2).map(x -> x + "2"));
+        System.out.println("-------");
+
+        List<Integer> l1 = Arrays.asList(1,2,3);
+        List<Integer> l2  = Arrays.asList(4,5,6);
+        List<Integer> l3 = Arrays.asList();
+        Stream.of(l1,l2,l3).flatMap(x->x.stream()).map(x->x+1).forEach(System.out::println);
 
     }
 }
