@@ -22,10 +22,10 @@ public class TestsFormatDateTime {
 
         LocalDate date1 = LocalDate.of(2020, Month.JANUARY, 20);
         LocalTime time1 = LocalTime.of(11, 12, 34);
-        LocalDateTime dateTime = LocalDateTime.of(date1,time1);
-        System.out.println("ISO_LOCAL_DATE: "+date1.format(DateTimeFormatter.ISO_LOCAL_DATE));
-        System.out.println("ISO_LOCAL_TIME: "+time1.format(DateTimeFormatter.ISO_LOCAL_TIME));
-        System.out.println("ISO_LOCAL_DATE_TIME: "+dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        LocalDateTime dateTime = LocalDateTime.of(date1, time1);
+        System.out.println("ISO_LOCAL_DATE: " + date1.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        System.out.println("ISO_LOCAL_TIME: " + time1.format(DateTimeFormatter.ISO_LOCAL_TIME));
+        System.out.println("ISO_LOCAL_DATE_TIME: " + dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         System.out.println("--------------------------");
 
@@ -44,6 +44,24 @@ public class TestsFormatDateTime {
         //time cannot be formatted as date
         //System.out.println(time1.format(shortDateTime1));//java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: DayOfMonth
 
+        System.out.println("--------------------------");
+        LocalDate date2 = LocalDate.of(2020, Month.JANUARY, 20);
+        LocalTime time2 = LocalTime.of(11, 12, 34);
+        LocalDateTime dateTime2 = LocalDateTime.of(date2, time2);
+
+        DateTimeFormatter shortF = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+        DateTimeFormatter mediumF = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
+        System.out.println("SHORT: "+shortF.format(dateTime2));
+        System.out.println("MEDIUM: "+mediumF.format(dateTime2));
+
+        System.out.println("--------------------------");
+
+        DateTimeFormatter f  = DateTimeFormatter.ofPattern("MM dd yyyy");
+        LocalDate date3 = LocalDate.parse("01 02 2015", f);
+        System.out.println(date3);
+        LocalTime time3 = LocalTime.parse("11:22");
+        System.out.println(time3);
 
 
 
