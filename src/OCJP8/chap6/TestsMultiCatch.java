@@ -52,6 +52,17 @@ public class TestsMultiCatch {
             handleException(e);
         }
 
+        System.out.println("--------Multi catch-------------");
+
+        try {
+            Path path = Paths.get("dolphinsBorn.txt");
+            String text = new String(Files.readAllBytes(path));
+            LocalDate date = LocalDate.parse(text);
+            System.out.println(date);
+        } catch (DateTimeParseException | IOException  e) {
+            handleException(e);
+        }
+
 
     }
 
