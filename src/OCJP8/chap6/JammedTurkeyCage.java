@@ -48,5 +48,15 @@ public class JammedTurkeyCage implements AutoCloseable {
         }
 
 
+        System.out.println("------Doesn't throw suppressed exception---------");
+
+        try(JammedTurkeyCage t1 = new JammedTurkeyCage()){
+            throw new IllegalStateException("turkeys ran off");
+        }
+        finally {
+            //since  this line throws exception? previous exception is lost
+            throw new RuntimeException("and we couldn't find them");
+        }
+
     }
 }
