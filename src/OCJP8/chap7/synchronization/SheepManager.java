@@ -13,7 +13,9 @@ public class SheepManager {
 
     private void incrementAndReport() {
       //  System.out.println((++sheepCount) + " ");
-        System.out.println((sheepCount.incrementAndGet()) + " ");
+        synchronized (this) {
+            System.out.println((sheepCount.incrementAndGet()) + " ");
+        }
     }
 
     public static void main(String[] args) {
